@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ka">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>პროდუქტის დამატება</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 20px;
+      max-width: 500px;
+      margin: auto;
+    }
+    input, button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      font-size: 16px;
+    }
+    button {
+      background-color: black;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h2>პროდუქტის დამატება</h2>
+  <form id="productForm">
+    <input type="text" id="id" placeholder="ID" required />
+    <input type="text" id="name" placeholder="დასახელება" required />
+    <input type="text" id="partNumber" placeholder="Part Number" required />
+    <input type="number" id="price" placeholder="ფასი" required />
+    <input type="text" id="category" placeholder="კატეგორია" required />
+    <input type="text" id="models" placeholder="რომელი მოდელებისთვის" required />
+    <input type="number" id="quantity" placeholder="რაოდენობა" required />
+    <button type="submit">დამატება</button>
+  </form>
+
+  <p id="response"></p>
+
+  <script>
+    const scriptURL = "https://script.google.com/macros/s/AKfycbwgyn1GssVKv2NTNJD7QTL4Voh6GgZZVv2veabatiSBqGWzwNR2Md6bj9mNE7cFKtVY/exec";
+
+    document.getElementById("productForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      const data = {
+        id: document.getElementById("id").value,
+        name: document.getElementById("name").value,
+        partNumber: document.getElementById("partNumber").value,
+        price: parseFloat(document.getElementById("price").value),
+        category: document.getElementById("category").value,
+        models: document.getElementById("models").value,
+        quantity: parseInt(document.getElementById("quantity").value),
+      };
+
+      fetch(scriptURL, {
+        method: "POST",
+        body: JSON.stringify(data),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+        .then((res) => res.text())
+        .then((text) => {
+          document.getElementById("response").innerText = text;
+          document.getElementById("productForm").reset();
+        })
+        .catch((err) => {
+          document.getElementById("response").innerText = "შეცდომა: " + err;
+        });
+    });
+  </script>
+</body>
+</html>
